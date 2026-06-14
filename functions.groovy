@@ -31,25 +31,25 @@ def findPodsFromName(String namespace, String name) {
 }
 
 def notifySlack(text, channel, attachments) {
-    def slackURL = env.SLACK_WEBHOOK
-    def jenkinsIcon = 'https://a.slack-edge.com/205a/img/services/jenkins-ci_72.png'
+    // def slackURL = env.SLACK_WEBHOOK
+    // def jenkinsIcon = 'https://a.slack-edge.com/205a/img/services/jenkins-ci_72.png'
 
     def payload = JsonOutput.toJson([
         text: text,
         channel: channel,
         username: "jenkins",
-        icon_url: jenkinsIcon,
+        icon_url: "https://a.slack-edge.com/205a/img/services/jenkins-ci_72.png",
         attachments: attachments
     ])
 
     writeFile file: 'slack_payload.json', text: payload
 
-    sh """
+    sh '''
         curl -X POST \
         -H "Content-Type: application/json" \
         --data @slack_payload.json \
-        "${slackURL}"
-    """
+        "$SLACK_WEBHOOK"
+    '''
 }
 
 return this
